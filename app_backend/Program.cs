@@ -1,11 +1,4 @@
-using Npgsql;
-
-string connectionString = "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=mydb";
-
-using var connection = new NpgsqlConnection(connectionString);
-connection.Open();
-
-Console.WriteLine("Connected to PostgreSQL!");
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
