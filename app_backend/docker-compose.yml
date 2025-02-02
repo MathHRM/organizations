@@ -1,19 +1,19 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: DockerFile
-    ports:
-      - "6969:80"
-    volumes:
-      - .:/app
-    depends_on:
-      - db
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=db;Database=mydb;Username=postgres;Password=postgres
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: DockerFile
+  #   ports:
+  #     - "6969:80"
+  #   volumes:
+  #     - .:/app
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ConnectionStrings__DefaultConnection=Host=db;Database=mydb;Username=postgres;Password=postgres
 
   db:
     image: postgres:16.4
