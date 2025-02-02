@@ -1,3 +1,12 @@
+using Npgsql;
+
+string connectionString = "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=mydb";
+
+using var connection = new NpgsqlConnection(connectionString);
+connection.Open();
+
+Console.WriteLine("Connected to PostgreSQL!");
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
