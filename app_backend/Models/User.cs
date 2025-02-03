@@ -15,5 +15,6 @@ namespace app_backend.Models
         public string Email { get; set; }
         [Column("password")]
         public string Password { get; set; }
+        public List<Organization> Organizations { get; set; } = [];
     }
 }
