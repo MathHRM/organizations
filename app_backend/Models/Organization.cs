@@ -9,8 +9,10 @@ namespace app_backend.Models
         [Key]
         [Column("id")]
         public int Id { get; set; }
+
         [Column("name")]
         public string Name { get; set; }
+
         public List<User> Users { get; set; } = [];
     }
 }
