@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using app_backend.Repositories;
 using app_backend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace app_backend.Http.Controllers
 {
