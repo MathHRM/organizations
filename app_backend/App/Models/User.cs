@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace app_backend.Models
+namespace app_backend.App.Models
 {
     [Table("users")]
     public class User
@@ -12,14 +12,14 @@ namespace app_backend.Models
         public int Id { get; set; }
 
         [Column("name")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Column("email")]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         [Column("password")]
         [JsonIgnore]
-        public string Password { get; set; }
+        public required string Password { get; set; }
 
         public List<Organization> Organizations { get; set; } = [];
     }

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace app_backend.Models
+namespace app_backend.App.Models
 {
     [Table("organizations")]
     public class Organization

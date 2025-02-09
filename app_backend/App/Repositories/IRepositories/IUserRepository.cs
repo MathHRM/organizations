@@ -1,6 +1,6 @@
-using app_backend.Models;
+using app_backend.App.Models;
 
-namespace app_backend.Repositories.IRepositories
+namespace app_backend.App.Repositories.IRepositories
 {
     public interface IUserRepository
     {

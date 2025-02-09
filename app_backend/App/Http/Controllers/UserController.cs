@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using app_backend.Repositories;
-using app_backend.Models;
+using app_backend.App.Repositories;
+using app_backend.App.Models;
 using Microsoft.AspNetCore.Authorization;
-using app_backend.Repositories.IRepositories;
+using app_backend.App.Repositories.IRepositories;
 
-namespace app_backend.Http.Controllers
+namespace app_backend.App.Http.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using app_backend.Models;
-using app_backend.Repositories.IRepositories;
+using app_backend.App.Models;
+using app_backend.App.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace app_backend.Repositories
+namespace app_backend.App.Repositories
 {
     public class UserRepository : IUserRepository
     {

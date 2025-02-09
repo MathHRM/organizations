@@ -3,11 +3,10 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace app_backend.Services
+namespace app_backend.App.Services
 {
     public class TokenService
     {
-        private const string _key = "your_secret_key";
         private const string Issuer = "your_issuer";
         private const string Audience = "your_audience";
 
@@ -20,7 +19,7 @@ namespace app_backend.Services
 
         public string GenerateToken(string username)
         {
-            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET") ?? _key);
+            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET"));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
