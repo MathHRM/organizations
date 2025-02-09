@@ -9,7 +9,7 @@ using app_backend.App.Repositories.IRepositories;
 namespace app_backend.App.Http.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/users")]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userService;
@@ -27,7 +27,7 @@ namespace app_backend.App.Http.Controllers
         }
 
         [HttpGet("{id}")]
-        // [Authorize]
+        [Authorize]
         public async Task<ActionResult<User>> GetUser(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);

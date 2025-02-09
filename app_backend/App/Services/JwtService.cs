@@ -9,23 +9,23 @@ namespace app_backend.App.Services
     {
         private const string Issuer = "your_issuer";
         private const string Audience = "your_audience";
+        private string _key;
 
-        private readonly JwtSecurityTokenHandler _tokenHandler;
-
-        public TokenService(JwtSecurityTokenHandler tokenHandler)
+        public TokenService(IConfiguration environment)
         {
-            _tokenHandler = tokenHandler;
+            _key = environment["JwtSettings:Secret"];
         }
 
-        public string GenerateToken(string username)
+        public string GenerateToken(int id, string email)
         {
-            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET"));
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_key);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim("role", "admin")
+                    new Claim(ClaimTypes.NameIdentifier, id.ToString()),
+                    new Claim(ClaimTypes.Name, email),
             }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 Issuer = Issuer,
@@ -34,8 +34,8 @@ namespace app_backend.App.Services
                     SecurityAlgorithms.HmacSha256Signature)
             };
 
-            var token = _tokenHandler.CreateToken(tokenDescriptor);
-            return _tokenHandler.WriteToken(token);
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 

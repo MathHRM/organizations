@@ -1,4 +1,4 @@
-using app_backend.Models;
+using app_backend.App.Models;
 using Microsoft.EntityFrameworkCore;
 
 public class AppDbContext : DbContext

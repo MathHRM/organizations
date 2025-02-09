@@ -1,5 +1,7 @@
 using System.Text;
-using app_backend.Repositories;
+using app_backend.App.Repositories;
+using app_backend.App.Repositories.IRepositories;
+using app_backend.App.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,7 +17,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
@@ -27,11 +28,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = "your_issuer",
                 ValidAudience = "your_audience",
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_key"))
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"])
+                )
             };
         });
+builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<TokenService, TokenService>();
 
 var app = builder.Build();
 

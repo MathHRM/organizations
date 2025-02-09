@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using app_backend.App.Models;
 using app_backend.App.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;

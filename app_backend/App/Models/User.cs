@@ -12,14 +12,14 @@ namespace app_backend.App.Models
         public int Id { get; set; }
 
         [Column("name")]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         [Column("email")]
-        public required string Email { get; set; }
+        public string Email { get; set; }
 
         [Column("password")]
         [JsonIgnore]
-        public required string Password { get; set; }
+        public string Password { get; set; }
 
         public List<Organization> Organizations { get; set; } = [];
     }
