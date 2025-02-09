@@ -1,19 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using app_backend.Models;
+using app_backend.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace app_backend.Repositories
 {
-    public interface IUserRepository
-    {
-        Task<User> GetUserByIdAsync(int id);
-        Task<IEnumerable<User>> GetAllUsersAsync();
-        Task<User> AddUserAsync(User user);
-        Task<bool> UpdateUserAsync(User user);
-        Task<bool> DeleteUserAsync(int id);
-    }
-
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _context;
@@ -23,7 +15,7 @@ namespace app_backend.Repositories
             _context = context;
         }
 
-        public async Task<User> GetUserByIdAsync(int id)
+        public async Task<User?> GetUserByIdAsync(int id)
         {
             return await _context.Users.FindAsync(id);
         }

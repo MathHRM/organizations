@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using app_backend.Repositories;
 using app_backend.Models;
 using Microsoft.AspNetCore.Authorization;
+using app_backend.Repositories.IRepositories;
 
 namespace app_backend.Http.Controllers
 {
@@ -26,6 +27,7 @@ namespace app_backend.Http.Controllers
         }
 
         [HttpGet("{id}")]
+        // [Authorize]
         public async Task<ActionResult<User>> GetUser(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);
