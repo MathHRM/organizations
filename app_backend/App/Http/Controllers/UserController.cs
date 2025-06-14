@@ -12,17 +12,17 @@ namespace app_backend.App.Http.Controllers
     [Route("api/users")]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository _userService;
+        private readonly IUserRepository _userRepository;
 
-        public UserController(IUserRepository userService)
+        public UserController(IUserRepository userRepository)
         {
-            _userService = userService;
+            _userRepository = userRepository;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            var users = await _userService.GetAllUsersAsync();
+            var users = await _userRepository.GetAllUsersAsync();
             return Ok(users);
         }
 
@@ -30,7 +30,7 @@ namespace app_backend.App.Http.Controllers
         [Authorize]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            var user = await _userService.GetUserByIdAsync(id);
+            var user = await _userRepository.GetUserByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -41,7 +41,7 @@ namespace app_backend.App.Http.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> CreateUser(User user)
         {
-            var createdUser = await _userService.AddUserAsync(user);
+            var createdUser = await _userRepository.AddUserAsync(user);
             return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, createdUser);
         }
 
@@ -53,7 +53,7 @@ namespace app_backend.App.Http.Controllers
                 return BadRequest();
             }
 
-            var result = await _userService.UpdateUserAsync(user);
+            var result = await _userRepository.UpdateUserAsync(user);
             if (!result)
             {
                 return NotFound();
@@ -65,7 +65,7 @@ namespace app_backend.App.Http.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var result = await _userService.DeleteUserAsync(id);
+            var result = await _userRepository.DeleteUserAsync(id);
             if (!result)
             {
                 return NotFound();
