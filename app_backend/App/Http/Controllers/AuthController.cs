@@ -17,12 +17,12 @@ namespace app_backend.App.Http.Controllers
     {
         private readonly TokenService _tokenService;
 
-        private readonly IUserRepository _userService;
+        private readonly IUserRepository _userRepository;
 
-        public AuthController(TokenService tokenService, IUserRepository userService)
+        public AuthController(TokenService tokenService, IUserRepository userRepository)
         {
             _tokenService = tokenService;
-            _userService = userService;
+            _userRepository = userRepository;
         }
 
         [HttpPost]
@@ -36,7 +36,7 @@ namespace app_backend.App.Http.Controllers
                 Name = request.Name
             };
 
-            var createdUser = await _userService.AddUserAsync(user);
+            var createdUser = await _userRepository.AddUserAsync(user);
 
             _tokenService.GenerateToken(createdUser.Id, createdUser.Email);
             
