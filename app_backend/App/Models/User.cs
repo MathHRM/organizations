@@ -16,6 +16,6 @@ namespace app_backend.App.Models
         [JsonIgnore]
         public string Password { get; set; }
 
-        public List<Organization> Organizations { get; set; } = [];
+        public List<OrganizationUser> OrganizationUsers { get; set; } = [];
     }
 }

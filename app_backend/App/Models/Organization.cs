@@ -10,6 +10,6 @@ namespace app_backend.App.Models
 
         public string Name { get; set; }
 
-        public List<User> Users { get; set; } = [];
+        public List<OrganizationUser> OrganizationUsers { get; set; } = [];
     }
 }
