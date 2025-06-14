@@ -2,6 +2,7 @@ using System.Text;
 using app_backend.App.Repositories;
 using app_backend.App.Repositories.IRepositories;
 using app_backend.App.Services;
+using app_backend.App.Services.IServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -36,6 +37,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<TokenService, TokenService>();
 
 var app = builder.Build();
