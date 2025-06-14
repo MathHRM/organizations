@@ -3,24 +3,24 @@ using System.Security.Claims;
 using System.Text;
 using app_backend.App.Models;
 using Microsoft.IdentityModel.Tokens;
+using app_backend.App.Config;
+using Microsoft.Extensions.Options;
 
 namespace app_backend.App.Services
 {
     public class TokenService
     {
-        private const string Issuer = "your_issuer";
-        private const string Audience = "your_audience";
-        private string _key;
+        private readonly JwtSettings _jwtSettings;
 
-        public TokenService(IConfiguration environment)
+        public TokenService(IOptions<JwtSettings> jwtSettings)
         {
-            _key = environment["JwtSettings:Secret"];
+            _jwtSettings = jwtSettings.Value;
         }
 
         public string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_key);
+            var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -29,9 +29,9 @@ namespace app_backend.App.Services
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.Email, user.Email),
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                Issuer = Issuer,
-                Audience = Audience,
+                Expires = DateTime.UtcNow.AddHours(_jwtSettings.TokenExpirationHours),
+                Issuer = _jwtSettings.Issuer,
+                Audience = _jwtSettings.Audience,
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature
