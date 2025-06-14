@@ -23,6 +23,7 @@ namespace app_backend.App.Http.Controllers
 
         [HttpGet]
         [Authorize]
+        [Route("Me")]
         public async Task<IActionResult> Me()
         {
             var user = await _userService.GetUserByIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
