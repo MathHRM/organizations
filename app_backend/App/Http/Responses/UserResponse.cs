@@ -7,5 +7,7 @@ namespace app_backend.App.Http.Responses
         public string Name { get; set; } = null!;
 
         public string Email { get; set; } = null!;
+
+        public List<OrganizationResponse> Organizations { get; set; } = [];
     }
 }

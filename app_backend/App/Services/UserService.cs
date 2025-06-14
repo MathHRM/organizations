@@ -87,5 +87,10 @@ namespace app_backend.App.Services
 
             return user;
         }
+
+        public async Task<User?> GetUserWithOrganizationsAsync(int userId)
+        {
+            return await _userRepository.GetUserWithOrganizationsAsync(userId);
+        }
     }
 } 

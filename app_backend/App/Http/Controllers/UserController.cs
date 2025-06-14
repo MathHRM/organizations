@@ -27,12 +27,25 @@ namespace app_backend.App.Http.Controllers
         [Route("Me")]
         public async Task<IActionResult> Me()
         {
-            var user = await _userService.GetUserByIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var user = await _userService.GetUserWithOrganizationsAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
             return Ok(new UserResponse
             {
                 Id = user.Id,
                 Name = user.Name,
-                Email = user.Email
+                Email = user.Email,
+                Organizations = user.OrganizationUsers.Select(ou => new OrganizationResponse
+                {
+                    Id = ou.Organization.Id,
+                    Name = ou.Organization.Name
+                }).ToList()
             });
         }
     }

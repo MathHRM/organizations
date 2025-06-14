@@ -49,5 +49,13 @@ namespace app_backend.App.Repositories
 
             return false;
         }
+
+        public async Task<User?> GetUserWithOrganizationsAsync(int userId)
+        {
+            return await _context.Users
+                .Include(u => u.OrganizationUsers)
+                .ThenInclude(ou => ou.Organization)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+        }
     }
 }
