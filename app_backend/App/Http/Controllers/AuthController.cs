@@ -27,7 +27,7 @@ namespace app_backend.App.Http.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest request)
+        public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterRequest request)
         {
             if (await _userService.UserExistsAsync(request.Email))
             {
@@ -43,15 +43,21 @@ namespace app_backend.App.Http.Controllers
 
             var createdUser = await _userService.CreateUserAsync(user);
 
-            return Ok(new RegisterResponse
+            return Ok(new AuthResponse
             {
                 Token = _tokenService.GenerateToken(createdUser),
+                User = new UserResponse
+                {
+                    Id = createdUser.Id,
+                    Name = createdUser.Name,
+                    Email = createdUser.Email
+                }
             });
         }
 
         [HttpPost]
         [Route("Login")]
-        public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
+        public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request)
         {
             var user = await _userService.ValidateUserCredentialsAsync(request.Email, request.Password);
             if (user == null)
@@ -61,7 +67,7 @@ namespace app_backend.App.Http.Controllers
 
             var token = _tokenService.GenerateToken(user);
 
-            return Ok(new LoginResponse
+            return Ok(new AuthResponse
             {
                 Token = token,
                 User = new UserResponse

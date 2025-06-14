@@ -1,6 +1,6 @@
 namespace app_backend.App.Http.Responses
 {
-    public class LoginResponse
+    public class AuthResponse
     {
         public string Token { get; set; } = null!;
 
