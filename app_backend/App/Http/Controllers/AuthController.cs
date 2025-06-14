@@ -45,7 +45,7 @@ namespace app_backend.App.Http.Controllers
 
             return Ok(new RegisterResponse
             {
-                Token = _tokenService.GenerateToken(createdUser.Id, createdUser.Email),
+                Token = _tokenService.GenerateToken(createdUser),
             });
         }
 
@@ -59,7 +59,7 @@ namespace app_backend.App.Http.Controllers
                 return Unauthorized("Invalid email or password");
             }
 
-            var token = _tokenService.GenerateToken(user.Id, user.Email);
+            var token = _tokenService.GenerateToken(user);
 
             return Ok(new LoginResponse
             {

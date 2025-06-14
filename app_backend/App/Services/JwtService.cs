@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using app_backend.App.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace app_backend.App.Services
@@ -16,7 +17,7 @@ namespace app_backend.App.Services
             _key = environment["JwtSettings:Secret"];
         }
 
-        public string GenerateToken(int id, string email)
+        public string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_key);
@@ -24,8 +25,9 @@ namespace app_backend.App.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
-                    new Claim(ClaimTypes.NameIdentifier, id.ToString()),
-                    new Claim(ClaimTypes.Name, email),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim(ClaimTypes.Email, user.Email),
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 Issuer = Issuer,
