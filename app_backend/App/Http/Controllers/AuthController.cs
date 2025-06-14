@@ -29,7 +29,6 @@ namespace app_backend.App.Http.Controllers
         [Route("Register")]
         public async Task<ActionResult<RegisterResponse>> Register([FromBody] RegisterRequest request)
         {
-            // Check if user already exists
             if (await _userService.UserExistsAsync(request.Email))
             {
                 return BadRequest("User with this email already exists");
@@ -38,7 +37,7 @@ namespace app_backend.App.Http.Controllers
             var user = new User
             {
                 Email = request.Email,
-                Password = request.Password, // UserService will handle password hashing
+                Password = request.Password,
                 Name = request.Name
             };
 

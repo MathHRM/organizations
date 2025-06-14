@@ -5,7 +5,6 @@ namespace app_backend.App.Http.Responses
 {
     public class RegisterResponse
     {
-        [JsonPropertyName("token")]
         public string Token { get; set; } = null!;
     }
 }

@@ -5,6 +5,7 @@ using app_backend.App.Repositories;
 using app_backend.App.Models;
 using Microsoft.AspNetCore.Authorization;
 using app_backend.App.Repositories.IRepositories;
+using app_backend.App.Services.IServices;
 
 namespace app_backend.App.Http.Controllers
 {
@@ -12,18 +13,19 @@ namespace app_backend.App.Http.Controllers
     [Route("api/Users")]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserService userService)
         {
-            _userRepository = userRepository;
+            _userService = userService;
         }
 
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Me()
         {
-            throw new Exception("Metodo nao implementado");            
+            var user = await _userService.GetUserByIdAsync(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
+            return Ok(user);
         }
     }
 }
