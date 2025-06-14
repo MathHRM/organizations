@@ -10,6 +10,7 @@ namespace app_backend.App.Repositories.IRepositories
         Task<bool> UpdateUserAsync(User user);
         Task<bool> DeleteUserAsync(int id);
         Task<User?> GetUserWithOrganizationsAsync(int userId);
+        Task<User?> GetUserWithOwnedOrganizationAsync(int userId);
         Task<OrganizationUser> AddOrganizationUserAsync(OrganizationUser organizationUser);
     }
 }

@@ -1,3 +1,4 @@
+using app_backend.App.Enums;
 using app_backend.App.Models;
 using app_backend.App.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +57,14 @@ namespace app_backend.App.Repositories
                 .Include(u => u.OrganizationUsers)
                 .ThenInclude(ou => ou.Organization)
                 .FirstOrDefaultAsync(u => u.Id == userId);
+        }
+
+        public async Task<User?> GetUserWithOwnedOrganizationAsync(int userId)
+        {
+            return await _context.Users
+                .Include(u => u.OrganizationUsers)
+                .ThenInclude(ou => ou.Organization)
+                .FirstOrDefaultAsync(u => u.Id == userId && u.OrganizationUsers.Any(ou => ou.Role == (int) Role.Owner));
         }
 
         public async Task<OrganizationUser> AddOrganizationUserAsync(OrganizationUser organizationUser)

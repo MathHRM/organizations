@@ -67,18 +67,23 @@ namespace app_backend.App.Http.Controllers
                 return Unauthorized("Invalid email or password");
             }
 
-            // var organizationUser = await _userService.GetOrganizationForUserAsync(user.Id);
-
-            // var token = _tokenService.GenerateToken(user, organizationUser.OrganizationId, (Role) organizationUser.Role);
+            var organizationUser = user.OrganizationUsers.FirstOrDefault(ou => ou.Role == (int) Role.Owner);
+            var token = _tokenService.GenerateToken(user, (Role) organizationUser.Role, organizationUser.OrganizationId);
 
             return Ok(new AuthResponse
             {
-                Token = "",
-                User = new UserResponse 
+                Token = token,
+                User = new UserResponse
                 {
                     Id = user.Id,
                     Name = user.Name,
-                    Email = user.Email
+                    Email = user.Email,
+                    Organizations = user.OrganizationUsers.Select(ou => new OrganizationResponse
+                    {
+                        Id = ou.Organization.Id,
+                        Name = ou.Organization.Name,
+                        Role = (Role) ou.Role
+                    }).ToList()
                 }
             });
         }

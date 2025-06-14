@@ -25,7 +25,10 @@ namespace app_backend.App.Services
 
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return await _context.Users
+                .Include(u => u.OrganizationUsers)
+                .ThenInclude(ou => ou.Organization)
+                .FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
@@ -66,7 +69,7 @@ namespace app_backend.App.Services
 
             existingUser.Name = user.Name ?? existingUser.Name;
             existingUser.Email = user.Email ?? existingUser.Email;
-            
+
             if (!string.IsNullOrEmpty(user.Password))
             {
                 existingUser.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
@@ -107,5 +110,17 @@ namespace app_backend.App.Services
         {
             return await _userRepository.GetUserWithOrganizationsAsync(userId);
         }
+
+        public async Task<User?> GetUserWithOwnedOrganizationAsync(int userId)
+        {
+            var user = await _userRepository.GetUserWithOwnedOrganizationAsync(userId);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return user;
+        }
     }
-} 
+}
