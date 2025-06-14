@@ -1,3 +1,4 @@
+using app_backend.App.Enums;
 using app_backend.App.Models;
 using app_backend.App.Repositories.IRepositories;
 using app_backend.App.Services.IServices;
@@ -8,6 +9,7 @@ namespace app_backend.App.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IOrganizationRepository _organizationRepository;
         private readonly AppDbContext _context;
 
         public UserService(IUserRepository userRepository, AppDbContext context)
@@ -38,7 +40,20 @@ namespace app_backend.App.Services
                 user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             }
 
-            return await _userRepository.AddUserAsync(user);
+            var organization = new Organization { Name = $"{user.Name}'s Organization" };
+            var organizationUser = new OrganizationUser
+            {
+                User = user,
+                Organization = organization,
+                Role = (int) Role.Owner
+            };
+            user.OrganizationUsers = new List<OrganizationUser> { organizationUser };
+
+            await _context.Users.AddAsync(user);
+            await _context.Organizations.AddAsync(organization);
+            await _context.SaveChangesAsync();
+
+            return user;
         }
 
         public async Task<User?> UpdateUserAsync(int id, User user)

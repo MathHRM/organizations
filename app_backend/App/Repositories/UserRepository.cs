@@ -57,5 +57,12 @@ namespace app_backend.App.Repositories
                 .ThenInclude(ou => ou.Organization)
                 .FirstOrDefaultAsync(u => u.Id == userId);
         }
+
+        public async Task<OrganizationUser> AddOrganizationUserAsync(OrganizationUser organizationUser)
+        {
+            await _context.OrganizationUsers.AddAsync(organizationUser);
+            await _context.SaveChangesAsync();
+            return organizationUser;
+        }
     }
 }

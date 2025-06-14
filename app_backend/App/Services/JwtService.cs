@@ -5,6 +5,7 @@ using app_backend.App.Models;
 using Microsoft.IdentityModel.Tokens;
 using app_backend.App.Config;
 using Microsoft.Extensions.Options;
+using app_backend.App.Enums;
 
 namespace app_backend.App.Services
 {
@@ -17,7 +18,7 @@ namespace app_backend.App.Services
             _jwtSettings = jwtSettings.Value;
         }
 
-        public string GenerateToken(User user)
+        public string GenerateToken(User user, Role role, int? organizationId = null)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
@@ -28,6 +29,8 @@ namespace app_backend.App.Services
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, role.ToString()),
+                    new Claim(JwtClaim.OrganizationId.ToString(), organizationId?.ToString() ?? string.Empty)
                 }),
                 Expires = DateTime.UtcNow.AddHours(_jwtSettings.TokenExpirationHours),
                 Issuer = _jwtSettings.Issuer,

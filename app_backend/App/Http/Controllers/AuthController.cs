@@ -9,6 +9,7 @@ using app_backend.App.Services;
 using app_backend.App.Services.IServices;
 using app_backend.App.Http.Requests;
 using app_backend.App.Http.Responses;
+using app_backend.App.Enums;
 
 namespace app_backend.App.Http.Controllers
 {
@@ -42,10 +43,11 @@ namespace app_backend.App.Http.Controllers
             };
 
             var createdUser = await _userService.CreateUserAsync(user);
+            var organizationId = user.OrganizationUsers.FirstOrDefault(ou => ou.Role == (int) Role.Owner)?.OrganizationId;
 
             return Ok(new AuthResponse
             {
-                Token = _tokenService.GenerateToken(createdUser),
+                Token = _tokenService.GenerateToken(createdUser, Role.Owner, organizationId),
                 User = new UserResponse
                 {
                     Id = createdUser.Id,
@@ -65,12 +67,14 @@ namespace app_backend.App.Http.Controllers
                 return Unauthorized("Invalid email or password");
             }
 
-            var token = _tokenService.GenerateToken(user);
+            // var organizationUser = await _userService.GetOrganizationForUserAsync(user.Id);
+
+            // var token = _tokenService.GenerateToken(user, organizationUser.OrganizationId, (Role) organizationUser.Role);
 
             return Ok(new AuthResponse
             {
-                Token = token,
-                User = new UserResponse
+                Token = "",
+                User = new UserResponse 
                 {
                     Id = user.Id,
                     Name = user.Name,

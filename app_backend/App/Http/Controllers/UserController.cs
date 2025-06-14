@@ -28,7 +28,6 @@ namespace app_backend.App.Http.Controllers
         public async Task<IActionResult> Me()
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-
             var user = await _userService.GetUserWithOrganizationsAsync(userId);
 
             if (user == null)
