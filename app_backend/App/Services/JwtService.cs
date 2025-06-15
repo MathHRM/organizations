@@ -18,7 +18,7 @@ namespace app_backend.App.Services
             _jwtSettings = jwtSettings.Value;
         }
 
-        public string GenerateToken(User user, Role role, int? organizationId = null)
+        public string GenerateToken(User user, Role role, int? organizationId = null, string organizationName = "")
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
@@ -29,8 +29,9 @@ namespace app_backend.App.Services
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Role, role.ToString()),
-                    new Claim(JwtClaim.OrganizationId.ToString(), organizationId?.ToString() ?? string.Empty)
+                    new Claim(ClaimTypes.Role, ((int) role).ToString()),
+                    new Claim(JwtClaim.OrganizationId.ToString(), organizationId?.ToString() ?? string.Empty),
+                    new Claim(JwtClaim.OrganizationName.ToString(), organizationName)
                 }),
                 Expires = DateTime.UtcNow.AddHours(_jwtSettings.TokenExpirationHours),
                 Issuer = _jwtSettings.Issuer,

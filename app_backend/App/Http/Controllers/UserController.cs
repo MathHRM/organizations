@@ -36,6 +36,8 @@ namespace app_backend.App.Http.Controllers
                 return NotFound();
             }
 
+            Console.WriteLine((User.FindFirst(ClaimTypes.Role)?.Value));
+
             return Ok(new UserResponse
             {
                 Id = user.Id,
@@ -43,8 +45,8 @@ namespace app_backend.App.Http.Controllers
                 Email = user.Email,
                 Organization = new OrganizationResponse
                 {
-                    Id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value),
-                    Name = User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                    Id = int.Parse(User.FindFirst(JwtClaim.OrganizationId.ToString())?.Value),
+                    Name = User.FindFirst(JwtClaim.OrganizationName.ToString())?.Value,
                     Role = (Role) int.Parse(User.FindFirst(ClaimTypes.Role)?.Value)
                 }
             });

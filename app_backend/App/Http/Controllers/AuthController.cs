@@ -49,7 +49,7 @@ namespace app_backend.App.Http.Controllers
 
             return Ok(new AuthResponse
             {
-                Token = _tokenService.GenerateToken(createdUser, Role.Owner, organization.Id),
+                Token = _tokenService.GenerateToken(createdUser, Role.Owner, organization.Id, organization.Name),
                 User = new UserResponse
                 {
                     Id = createdUser.Id,
@@ -76,7 +76,7 @@ namespace app_backend.App.Http.Controllers
             }
 
             var organizationUser = GetOrganizationUser(user, request.OrganizationId);
-            var token = _tokenService.GenerateToken(user, (Role) organizationUser.Role, organizationUser.OrganizationId);
+            var token = _tokenService.GenerateToken(user, (Role) organizationUser.Role, organizationUser.OrganizationId, organizationUser.Organization.Name);
 
             return Ok(new AuthResponse
             {
@@ -110,7 +110,7 @@ namespace app_backend.App.Http.Controllers
             }
 
             var organizationUser = GetOrganizationUser(user, request.OrganizationId);
-            var token = _tokenService.GenerateToken(user, (Role) organizationUser.Role, organizationUser.OrganizationId);
+            var token = _tokenService.GenerateToken(user, (Role) organizationUser.Role, organizationUser.OrganizationId, organizationUser.Organization.Name);
 
             return Ok(new AuthResponse
             {
