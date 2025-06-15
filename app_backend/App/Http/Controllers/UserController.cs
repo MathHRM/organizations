@@ -41,12 +41,12 @@ namespace app_backend.App.Http.Controllers
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Organizations = user.OrganizationUsers.Select(ou => new OrganizationResponse
+                Organization = new OrganizationResponse
                 {
-                    Id = ou.Organization.Id,
-                    Name = ou.Organization.Name,
-                    Role = (Role) ou.Role
-                }).ToList()
+                    Id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value),
+                    Name = User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                    Role = (Role) int.Parse(User.FindFirst(ClaimTypes.Role)?.Value)
+                }
             });
         }
     }

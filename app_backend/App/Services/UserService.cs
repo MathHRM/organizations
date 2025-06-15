@@ -111,6 +111,24 @@ namespace app_backend.App.Services
             return user;
         }
 
+        public async Task<User?> ValidateUserCredentialsAsync(int userId, int? organizationId = null)
+        {
+            var user = await GetUserByIdAsync(userId);
+            await LoadUserOrganizations(user);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (organizationId != null && ! user.OrganizationUsers.Exists(ou => ou.OrganizationId == organizationId))
+            {
+                return null;
+            }
+
+            return user;
+        }
+
         public async Task<User?> GetUserWithOrganizationsAsync(int userId)
         {
             return await _userRepository.GetUserWithOrganizationsAsync(userId);
@@ -131,6 +149,16 @@ namespace app_backend.App.Services
         public Organization? GetUserOwnedOrganization(User user)
         {
             return user.OrganizationUsers.FirstOrDefault(ou => ou.Role == (int) Role.Owner)?.Organization;
+        }
+
+        public async Task<User?> LoadUserOrganizations(User user)
+        {
+            await _context.OrganizationUsers
+                .Include(ou => ou.Organization)
+                .Where(ou => ou.UserId == user.Id)
+                .ToListAsync();
+
+            return user;
         }
     }
 }

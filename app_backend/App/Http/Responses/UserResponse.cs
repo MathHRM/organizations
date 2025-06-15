@@ -8,6 +8,6 @@ namespace app_backend.App.Http.Responses
 
         public string Email { get; set; } = null!;
 
-        public List<OrganizationResponse> Organizations { get; set; } = [];
+        public OrganizationResponse Organization { get; set; } = null!;
     }
 }

@@ -10,6 +10,7 @@ using app_backend.App.Services.IServices;
 using app_backend.App.Http.Requests;
 using app_backend.App.Http.Responses;
 using app_backend.App.Enums;
+using System.Security.Claims;
 
 namespace app_backend.App.Http.Controllers
 {
@@ -44,6 +45,7 @@ namespace app_backend.App.Http.Controllers
 
             var createdUser = await _userService.CreateUserAsync(user);
             var organization = _userService.GetUserOwnedOrganization(createdUser);
+            var organizationUser = GetOrganizationUser(createdUser, organization.Id);
 
             return Ok(new AuthResponse
             {
@@ -53,12 +55,12 @@ namespace app_backend.App.Http.Controllers
                     Id = createdUser.Id,
                     Name = createdUser.Name,
                     Email = createdUser.Email,
-                    Organizations = createdUser.OrganizationUsers.Select(ou => new OrganizationResponse
+                    Organization = new OrganizationResponse
                     {
-                        Id = ou.Organization.Id,
-                        Name = ou.Organization.Name,
-                        Role = (Role) ou.Role
-                    }).ToList()
+                        Id = organization.Id,
+                        Name = organization.Name,
+                        Role = (Role) organizationUser.Role
+                    }
                 }
             });
         }
@@ -84,12 +86,46 @@ namespace app_backend.App.Http.Controllers
                     Id = user.Id,
                     Name = user.Name,
                     Email = user.Email,
-                    Organizations = user.OrganizationUsers.Select(ou => new OrganizationResponse
+                    Organization = new OrganizationResponse
                     {
-                        Id = ou.Organization.Id,
-                        Name = ou.Organization.Name,
-                        Role = (Role) ou.Role
-                    }).ToList()
+                        Id = organizationUser.OrganizationId,
+                        Name = organizationUser.Organization.Name,
+                        Role = (Role) organizationUser.Role
+                    }
+                }
+            });
+        }
+
+        [HttpPost]
+        [Route("EnterOrganization")]
+        [Authorize]
+        public async Task<ActionResult<AuthResponse>> EnterOrganization([FromBody] EnterOrganizationRequest request)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var user = await _userService.ValidateUserCredentialsAsync(userId, request.OrganizationId);
+
+            if (user == null)
+            {
+                return Unauthorized("Invalid user");
+            }
+
+            var organizationUser = GetOrganizationUser(user, request.OrganizationId);
+            var token = _tokenService.GenerateToken(user, (Role) organizationUser.Role, organizationUser.OrganizationId);
+
+            return Ok(new AuthResponse
+            {
+                Token = token,
+                User = new UserResponse
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Email = user.Email,
+                    Organization = new OrganizationResponse
+                    {
+                        Id = organizationUser.OrganizationId,
+                        Name = organizationUser.Organization.Name,
+                        Role = (Role) organizationUser.Role
+                    }
                 }
             });
         }
