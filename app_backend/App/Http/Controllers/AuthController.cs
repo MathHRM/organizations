@@ -67,13 +67,13 @@ namespace app_backend.App.Http.Controllers
         [Route("Login")]
         public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request)
         {
-            var user = await _userService.ValidateUserCredentialsAsync(request.Email, request.Password);
+            var user = await _userService.ValidateUserCredentialsAsync(request.Email, request.Password, request.OrganizationId);
             if (user == null)
             {
                 return Unauthorized("Invalid email or password");
             }
 
-            var organizationUser = user.OrganizationUsers.FirstOrDefault(ou => ou.Role == (int) Role.Owner);
+            var organizationUser = GetOrganizationUser(user, request.OrganizationId);
             var token = _tokenService.GenerateToken(user, (Role) organizationUser.Role, organizationUser.OrganizationId);
 
             return Ok(new AuthResponse
@@ -92,6 +92,16 @@ namespace app_backend.App.Http.Controllers
                     }).ToList()
                 }
             });
+        }
+
+        private OrganizationUser? GetOrganizationUser(User user, int? organizationId)
+        {
+            if (organizationId == null)
+            {
+                return user.OrganizationUsers.FirstOrDefault(ou => ou.Role == (int) Role.Owner);
+            }
+
+            return user.OrganizationUsers.FirstOrDefault(ou => ou.OrganizationId == organizationId);
         }
     }
 }

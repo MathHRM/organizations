@@ -11,7 +11,7 @@ namespace app_backend.App.Services.IServices
         Task<User?> UpdateUserAsync(int id, User user);
         Task<bool> DeleteUserAsync(int id);
         Task<bool> UserExistsAsync(string email);
-        Task<User?> ValidateUserCredentialsAsync(string email, string password);
+        Task<User?> ValidateUserCredentialsAsync(string email, string password, int? organizationId = null);
         Task<User?> GetUserWithOrganizationsAsync(int userId);
         Task<User?> GetUserWithOwnedOrganizationAsync(int userId);
     }

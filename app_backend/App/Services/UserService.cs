@@ -90,10 +90,15 @@ namespace app_backend.App.Services
             return user != null;
         }
 
-        public async Task<User?> ValidateUserCredentialsAsync(string email, string password)
+        public async Task<User?> ValidateUserCredentialsAsync(string email, string password, int? organizationId = null)
         {
             var user = await GetUserByEmailAsync(email);
             if (user == null)
+            {
+                return null;
+            }
+
+            if (organizationId != null && ! user.OrganizationUsers.Exists(ou => ou.OrganizationId == organizationId))
             {
                 return null;
             }
