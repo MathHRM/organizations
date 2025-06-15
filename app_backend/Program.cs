@@ -43,6 +43,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<TokenService, TokenService>();
+builder.Services.AddScoped<UserService>();
 
 var app = builder.Build();
 

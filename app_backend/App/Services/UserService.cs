@@ -122,5 +122,10 @@ namespace app_backend.App.Services
 
             return user;
         }
+
+        public Organization? GetUserOwnedOrganization(User user)
+        {
+            return user.OrganizationUsers.FirstOrDefault(ou => ou.Role == (int) Role.Owner)?.Organization;
+        }
     }
 }

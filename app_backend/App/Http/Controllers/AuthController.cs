@@ -18,9 +18,9 @@ namespace app_backend.App.Http.Controllers
     public class AuthController : ControllerBase
     {
         private readonly TokenService _tokenService;
-        private readonly IUserService _userService;
+        private readonly UserService _userService;
 
-        public AuthController(TokenService tokenService, IUserService userService)
+        public AuthController(TokenService tokenService, UserService userService)
         {
             _tokenService = tokenService;
             _userService = userService;
@@ -43,16 +43,22 @@ namespace app_backend.App.Http.Controllers
             };
 
             var createdUser = await _userService.CreateUserAsync(user);
-            var organizationId = user.OrganizationUsers.FirstOrDefault(ou => ou.Role == (int) Role.Owner)?.OrganizationId;
+            var organization = _userService.GetUserOwnedOrganization(createdUser);
 
             return Ok(new AuthResponse
             {
-                Token = _tokenService.GenerateToken(createdUser, Role.Owner, organizationId),
+                Token = _tokenService.GenerateToken(createdUser, Role.Owner, organization.Id),
                 User = new UserResponse
                 {
                     Id = createdUser.Id,
                     Name = createdUser.Name,
-                    Email = createdUser.Email
+                    Email = createdUser.Email,
+                    Organizations = createdUser.OrganizationUsers.Select(ou => new OrganizationResponse
+                    {
+                        Id = ou.Organization.Id,
+                        Name = ou.Organization.Name,
+                        Role = (Role) ou.Role
+                    }).ToList()
                 }
             });
         }

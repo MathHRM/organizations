@@ -8,6 +8,7 @@ using app_backend.App.Repositories.IRepositories;
 using app_backend.App.Services.IServices;
 using System.Security.Claims;
 using app_backend.App.Http.Responses;
+using app_backend.App.Enums;
 
 namespace app_backend.App.Http.Controllers
 {
@@ -43,7 +44,8 @@ namespace app_backend.App.Http.Controllers
                 Organizations = user.OrganizationUsers.Select(ou => new OrganizationResponse
                 {
                     Id = ou.Organization.Id,
-                    Name = ou.Organization.Name
+                    Name = ou.Organization.Name,
+                    Role = (Role) ou.Role
                 }).ToList()
             });
         }
